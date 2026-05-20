@@ -492,6 +492,13 @@ function renderPanel(pi) {
   panel.appendChild(wrap);
 
   // メモ
+  if (pi === 1) {
+    const img = document.createElement('img');
+    img.src = 'images.png';
+    img.style.cssText = 'position:fixed; bottom:20px; right:20px; width:100px; opacity:0.5; pointer-events:none;';
+    panel.appendChild(img);
+  }
+
   const h2 = document.createElement('div'); h2.className = 'sec-heading'; h2.textContent = 'スケジュール・メモ';
   panel.appendChild(h2);
   const memo = document.createElement('textarea');
