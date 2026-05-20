@@ -492,10 +492,11 @@ function renderPanel(pi) {
   panel.appendChild(wrap);
 
   // メモ
-  if (pi === 1) {
+  const tabImgs = { 1: ['images.png', '100px'], 2: ['betcover.webp', '120px'], 3: ['mancity.webp', '90px'] };
+  if (tabImgs[pi]) {
     const img = document.createElement('img');
-    img.src = 'images.png';
-    img.style.cssText = 'position:fixed; bottom:20px; right:20px; width:100px; opacity:0.5; pointer-events:none;';
+    img.src = tabImgs[pi][0];
+    img.style.cssText = `position:fixed; bottom:20px; right:20px; width:${tabImgs[pi][1]}; opacity:0.5; pointer-events:none;`;
     panel.appendChild(img);
   }
 
