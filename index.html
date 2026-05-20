@@ -53,11 +53,8 @@
     }
     .sec-heading:first-child { margin-top: 0; }
 
-    .table-wrap {
-      overflow-x: auto;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+    /* テーブル */
+    .table-wrap { overflow-x: auto; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
     table { width: 100%; border-collapse: collapse; background: #fff; }
     thead { background: #1a1a2e; }
     th {
@@ -68,29 +65,42 @@
       color: #8892b0;
       white-space: nowrap;
     }
-    th.group-header {
-      text-align: center;
-      color: #64ffda;
-      border-bottom: 1px solid #2d3748;
-      font-size: 11px;
-    }
-    th.sub-header {
-      text-align: center;
-      color: #8892b0;
-      font-size: 10px;
-      font-weight: 600;
-    }
+    th.group-header { text-align: center; color: #64ffda; border-bottom: 1px solid #2d3748; }
+    th.sub-header { text-align: center; color: #8892b0; font-size: 10px; font-weight: 600; }
+    th.col-no { text-align: center; }
     td {
       padding: 6px 10px;
       border-bottom: 1px solid #f0f2f5;
       vertical-align: middle;
     }
-    tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: #fafbfc; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr.main-row:hover td { background: #fafbfc; }
 
-    td.col-no { color: #c5c8d3; font-size: 12px; text-align: center; width: 36px; }
-    th.col-no { text-align: center; }
+    td.col-no {
+      color: #c5c8d3;
+      font-size: 12px;
+      text-align: center;
+      width: 50px;
+    }
 
+    /* 展開トグルボタン */
+    .toggle-btn {
+      display: block;
+      margin: 0 auto 2px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 9px;
+      color: #8892b0;
+      padding: 2px 5px;
+      border-radius: 3px;
+      transition: color 0.15s, background 0.15s;
+      line-height: 1;
+    }
+    .toggle-btn:hover { color: #64ffda; background: #1a1a2e; }
+    .toggle-btn.open { color: #64ffda; }
+
+    /* 入力系 */
     .kw-input {
       width: 100%;
       min-width: 160px;
@@ -107,6 +117,21 @@
     .kw-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
     .kw-input::placeholder { color: #c5c8d3; font-weight: 400; }
 
+    .fb-input {
+      width: 100%;
+      min-width: 90px;
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      color: #555;
+      outline: none;
+      padding: 2px 4px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .fb-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
+    .fb-input::placeholder { color: #c5c8d3; }
+
     .date-input {
       border: none;
       background: transparent;
@@ -121,10 +146,8 @@
     }
     .date-input:focus { border-bottom-color: #64ffda; color: #1a1a2e; }
 
-    .select-wrap {
-      position: relative;
-      display: inline-block;
-    }
+    /* セレクト */
+    .select-wrap { position: relative; display: inline-block; }
     .select-wrap::after {
       content: '▾';
       position: absolute;
@@ -133,7 +156,6 @@
       transform: translateY(-50%);
       pointer-events: none;
       font-size: 10px;
-      color: inherit;
       opacity: 0.7;
     }
     .status-select {
@@ -148,26 +170,64 @@
       -webkit-appearance: none;
       text-align: center;
       min-width: 88px;
-      opacity: 0.9;
     }
-    .status-select:hover { opacity: 1; }
+    .status-select:hover { opacity: 0.9; }
     .status-select:focus { outline: 2px solid #64ffda; outline-offset: 2px; }
 
-    .fb-input {
-      width: 100%;
-      min-width: 100px;
-      border: none;
-      background: transparent;
+    /* 展開行 */
+    .detail-row { background: #f4f6fa; }
+    .detail-row > td { padding: 14px 20px 16px; }
+
+    .detail-inner { display: flex; gap: 28px; flex-wrap: wrap; }
+    .steps-section { flex: 1; min-width: 300px; }
+
+    .steps-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: #1a1a2e;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .step-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 4px;
+      border-bottom: 1px solid #e8ebf0;
+    }
+    .step-row:last-child { border-bottom: none; }
+
+    .step-label {
+      flex: 1;
       font-size: 12px;
+      color: #1a1a2e;
+      min-width: 160px;
+    }
+    .step-est {
+      font-size: 10px;
+      color: #8892b0;
+      margin-left: 5px;
+    }
+
+    .time-input {
+      border: 1px solid #dde1ea;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
       color: #555;
       outline: none;
-      padding: 2px 4px;
-      border-bottom: 1px solid transparent;
+      width: 140px;
       transition: border-color 0.15s;
+      background: #fff;
     }
-    .fb-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
-    .fb-input::placeholder { color: #c5c8d3; }
+    .time-input:focus { border-color: #64ffda; }
+    .time-input::placeholder { color: #c5c8d3; }
 
+    /* メモ */
     .memo-textarea {
       width: 100%;
       min-height: 100px;
@@ -200,8 +260,22 @@
 <script>
 const PERSONS = ['有方', '稲井', '今野', '田村'];
 const ARTICLE_COUNT = 9;
-const STATUS_OPTS = ['未着手', '作業中…', 'FB中', '完了'];
+const STATUS_OPTS  = ['未着手', '作業中…', 'FB中', '完了'];
+const STEP_OPTS    = ['未着手', '作業中…', '完了'];
 const PROGRESS_OPTS = ['—', 'オンスケ', '遅延', '前倒し'];
+
+const KOTSUSHI_STEPS = [
+  { label: '①用語と市場理解',      estimate: '1時間' },
+  { label: '②ターゲット・意図の仮説', estimate: '1時間' },
+  { label: '③KW調査・ライバル分析', estimate: '2時間' },
+  { label: '④ゴール決定',          estimate: '15分'  },
+  { label: '⑤ロジック組み立て',     estimate: '1時間' },
+  { label: '⑥骨子作成',            estimate: '2時間' },
+];
+
+const HONBUN_STEPS = [
+  { label: 'ライティング＆修正', estimate: '3時間' },
+];
 
 const STATUS_STYLE = {
   '未着手':  { bg: '#f0f2f5', color: '#aab0c0' },
@@ -214,8 +288,21 @@ const STATUS_STYLE = {
   '—':     { bg: '#f0f2f5', color: '#c5c8d3' },
 };
 
+const TOTAL_COLS = 10;
+
+function defaultStep() { return { status: '未着手', time: '' }; }
+
 function defaultArticle() {
-  return { kw: '', fbTanto: '', kotsushi: '未着手', honbun: '未着手', startPlan: '', startActual: '', endPlan: '', endActual: '', progress: '—' };
+  return {
+    kw: '', fbTanto: '',
+    kotsushi: '未着手',
+    kotsushiSteps: KOTSUSHI_STEPS.map(() => defaultStep()),
+    honbun: '未着手',
+    honbunSteps: HONBUN_STEPS.map(() => defaultStep()),
+    startPlan: '', startActual: '',
+    endPlan: '',   endActual: '',
+    progress: '—'
+  };
 }
 
 function defaultData() {
@@ -231,22 +318,31 @@ function loadData() {
     const saved = localStorage.getItem('wbs_data');
     if (saved) {
       const parsed = JSON.parse(saved);
-      // 既存データに新フィールドがない場合のマイグレーション
-      return parsed.map(person => ({
-        ...person,
-        articles: person.articles.map(art => ({ ...defaultArticle(), ...art }))
+      const def = defaultData();
+      return parsed.map((person, pi) => ({
+        ...def[pi], ...person,
+        articles: person.articles.map(art => {
+          const da = defaultArticle();
+          return {
+            ...da, ...art,
+            kotsushiSteps: KOTSUSHI_STEPS.map((_, i) =>
+              ({ ...defaultStep(), ...((art.kotsushiSteps || [])[i] || {}) })),
+            honbunSteps: HONBUN_STEPS.map((_, i) =>
+              ({ ...defaultStep(), ...((art.honbunSteps || [])[i] || {}) })),
+          };
+        })
       }));
     }
   } catch(e) {}
   return defaultData();
 }
 
-function saveData() {
-  localStorage.setItem('wbs_data', JSON.stringify(data));
-}
+function saveData() { localStorage.setItem('wbs_data', JSON.stringify(data)); }
 
 let data = loadData();
 let currentPanel = 0;
+
+// ---- ヘルパー ----
 
 function applySelectStyle(sel) {
   const s = STATUS_STYLE[sel.value] || STATUS_STYLE['—'];
@@ -261,36 +357,22 @@ function makeSelect(opts, value, onChange) {
   sel.className = 'status-select';
   opts.forEach(o => {
     const opt = document.createElement('option');
-    opt.value = o;
-    opt.textContent = o;
+    opt.value = o; opt.textContent = o;
     if (o === value) opt.selected = true;
     sel.appendChild(opt);
   });
   applySelectStyle(sel);
-  sel.addEventListener('change', () => {
-    applySelectStyle(sel);
-    onChange(sel.value);
-  });
+  sel.addEventListener('change', () => { applySelectStyle(sel); onChange(sel.value); });
   wrap.appendChild(sel);
   return wrap;
 }
 
-function makeFbInput(value, onChange) {
+function makeInput(cls, value, placeholder, onChange) {
   const inp = document.createElement('input');
   inp.type = 'text';
-  inp.className = 'fb-input';
+  inp.className = cls;
   inp.value = value;
-  inp.placeholder = '担当者名';
-  inp.addEventListener('input', () => onChange(inp.value));
-  return inp;
-}
-
-function makeKwInput(value, onChange) {
-  const inp = document.createElement('input');
-  inp.type = 'text';
-  inp.className = 'kw-input';
-  inp.value = value;
-  inp.placeholder = 'KWを入力';
+  inp.placeholder = placeholder;
   inp.addEventListener('input', () => onChange(inp.value));
   return inp;
 }
@@ -304,11 +386,90 @@ function makeDateInput(value, onChange) {
   return inp;
 }
 
-function td(child) {
+function tdWrap(child) {
   const el = document.createElement('td');
   if (child) el.appendChild(child);
   return el;
 }
+
+// ---- 詳細行（折りたたみ内容）----
+
+function makeDetailRow(personIdx, ai) {
+  const art = data[personIdx].articles[ai];
+  const tr = document.createElement('tr');
+  tr.className = 'detail-row';
+  tr.style.display = 'none';
+
+  const tdInner = document.createElement('td');
+  tdInner.colSpan = TOTAL_COLS;
+
+  const inner = document.createElement('div');
+  inner.className = 'detail-inner';
+
+  // 骨子作成 セクション
+  const kSection = document.createElement('div');
+  kSection.className = 'steps-section';
+  const kTitle = document.createElement('div');
+  kTitle.className = 'steps-title';
+  kTitle.textContent = '骨子作成の内訳';
+  kSection.appendChild(kTitle);
+
+  KOTSUSHI_STEPS.forEach((step, si) => {
+    const row = document.createElement('div');
+    row.className = 'step-row';
+
+    const lbl = document.createElement('span');
+    lbl.className = 'step-label';
+    lbl.innerHTML = `${step.label}<span class="step-est">（目安：${step.estimate}）</span>`;
+    row.appendChild(lbl);
+
+    row.appendChild(makeSelect(STEP_OPTS, art.kotsushiSteps[si].status, v => {
+      data[personIdx].articles[ai].kotsushiSteps[si].status = v; saveData();
+    }));
+
+    row.appendChild(makeInput('time-input', art.kotsushiSteps[si].time, '例）11:00~13:00', v => {
+      data[personIdx].articles[ai].kotsushiSteps[si].time = v; saveData();
+    }));
+
+    kSection.appendChild(row);
+  });
+  inner.appendChild(kSection);
+
+  // 本文作成 セクション
+  const hSection = document.createElement('div');
+  hSection.className = 'steps-section';
+  const hTitle = document.createElement('div');
+  hTitle.className = 'steps-title';
+  hTitle.textContent = '本文作成の内訳';
+  hSection.appendChild(hTitle);
+
+  HONBUN_STEPS.forEach((step, si) => {
+    const row = document.createElement('div');
+    row.className = 'step-row';
+
+    const lbl = document.createElement('span');
+    lbl.className = 'step-label';
+    lbl.innerHTML = `${step.label}<span class="step-est">（目安：${step.estimate}）</span>`;
+    row.appendChild(lbl);
+
+    row.appendChild(makeSelect(STEP_OPTS, art.honbunSteps[si].status, v => {
+      data[personIdx].articles[ai].honbunSteps[si].status = v; saveData();
+    }));
+
+    row.appendChild(makeInput('time-input', art.honbunSteps[si].time, '例）11:00~13:00', v => {
+      data[personIdx].articles[ai].honbunSteps[si].time = v; saveData();
+    }));
+
+    hSection.appendChild(row);
+  });
+  inner.appendChild(hSection);
+
+  tdInner.appendChild(inner);
+  tr.appendChild(tdInner);
+  return tr;
+}
+
+// ---- パネル描画 ----
 
 function renderPanel(personIdx) {
   const person = data[personIdx];
@@ -316,7 +477,6 @@ function renderPanel(personIdx) {
   panel.className = 'person-panel' + (personIdx === currentPanel ? ' active' : '');
   panel.id = `panel-${personIdx}`;
 
-  // ---- 記事進捗テーブル ----
   const heading1 = document.createElement('div');
   heading1.className = 'sec-heading';
   heading1.textContent = '記事進捗';
@@ -328,14 +488,13 @@ function renderPanel(personIdx) {
 
   // ヘッダー 2行
   const thead = document.createElement('thead');
-
   const tr1 = document.createElement('tr');
   [
-    { text: 'No.',     rowspan: 2, cls: 'col-no' },
-    { text: 'KW',      rowspan: 2 },
-    { text: 'FB担当',  rowspan: 2 },
+    { text: 'No.',    rowspan: 2, cls: 'col-no' },
+    { text: 'KW',     rowspan: 2 },
+    { text: 'FB担当', rowspan: 2 },
     { text: '骨子作成', rowspan: 2 },
-    { text: '本文提出', rowspan: 2 },
+    { text: '本文作成', rowspan: 2 },
     { text: '開始日',  colspan: 2, cls: 'group-header' },
     { text: '終了日',  colspan: 2, cls: 'group-header' },
     { text: '進捗',   rowspan: 2 },
@@ -360,58 +519,76 @@ function renderPanel(personIdx) {
   table.appendChild(thead);
 
   const tbody = document.createElement('tbody');
-  person.articles.forEach((art, ai) => {
-    const tr = document.createElement('tr');
 
+  person.articles.forEach((art, ai) => {
+    // 詳細行（先に作る）
+    const detailRow = makeDetailRow(personIdx, ai);
+
+    // メイン行
+    const tr = document.createElement('tr');
+    tr.className = 'main-row';
+
+    // No. ＋ トグルボタン
     const tdNo = document.createElement('td');
     tdNo.className = 'col-no';
-    tdNo.textContent = ai + 1;
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'toggle-btn';
+    toggleBtn.textContent = '▶';
+    toggleBtn.title = '詳細を展開';
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = detailRow.style.display !== 'none';
+      detailRow.style.display = isOpen ? 'none' : 'table-row';
+      toggleBtn.textContent = isOpen ? '▶' : '▼';
+      toggleBtn.classList.toggle('open', !isOpen);
+    });
+    tdNo.appendChild(toggleBtn);
+    const numSpan = document.createElement('span');
+    numSpan.textContent = ai + 1;
+    tdNo.appendChild(numSpan);
     tr.appendChild(tdNo);
 
-    tr.appendChild(td(makeKwInput(art.kw, v => {
+    tr.appendChild(tdWrap(makeInput('kw-input', art.kw, 'KWを入力', v => {
       data[personIdx].articles[ai].kw = v; saveData();
     })));
 
-    tr.appendChild(td(makeFbInput(art.fbTanto, v => {
+    tr.appendChild(tdWrap(makeInput('fb-input', art.fbTanto, '担当者名', v => {
       data[personIdx].articles[ai].fbTanto = v; saveData();
     })));
 
-    tr.appendChild(td(makeSelect(STATUS_OPTS, art.kotsushi, v => {
+    tr.appendChild(tdWrap(makeSelect(STATUS_OPTS, art.kotsushi, v => {
       data[personIdx].articles[ai].kotsushi = v; saveData();
     })));
 
-    tr.appendChild(td(makeSelect(STATUS_OPTS, art.honbun, v => {
+    tr.appendChild(tdWrap(makeSelect(STATUS_OPTS, art.honbun, v => {
       data[personIdx].articles[ai].honbun = v; saveData();
     })));
 
-    tr.appendChild(td(makeDateInput(art.startPlan, v => {
+    tr.appendChild(tdWrap(makeDateInput(art.startPlan, v => {
       data[personIdx].articles[ai].startPlan = v; saveData();
     })));
-
-    tr.appendChild(td(makeDateInput(art.startActual, v => {
+    tr.appendChild(tdWrap(makeDateInput(art.startActual, v => {
       data[personIdx].articles[ai].startActual = v; saveData();
     })));
-
-    tr.appendChild(td(makeDateInput(art.endPlan, v => {
+    tr.appendChild(tdWrap(makeDateInput(art.endPlan, v => {
       data[personIdx].articles[ai].endPlan = v; saveData();
     })));
-
-    tr.appendChild(td(makeDateInput(art.endActual, v => {
+    tr.appendChild(tdWrap(makeDateInput(art.endActual, v => {
       data[personIdx].articles[ai].endActual = v; saveData();
     })));
 
-    tr.appendChild(td(makeSelect(PROGRESS_OPTS, art.progress, v => {
+    tr.appendChild(tdWrap(makeSelect(PROGRESS_OPTS, art.progress, v => {
       data[personIdx].articles[ai].progress = v; saveData();
     })));
 
     tbody.appendChild(tr);
+    tbody.appendChild(detailRow);
   });
 
   table.appendChild(tbody);
   wrap.appendChild(table);
   panel.appendChild(wrap);
 
-  // ---- メモ ----
+  // メモ
   const heading2 = document.createElement('div');
   heading2.className = 'sec-heading';
   heading2.textContent = 'スケジュール・メモ';
@@ -421,9 +598,7 @@ function renderPanel(personIdx) {
   memo.className = 'memo-textarea';
   memo.placeholder = '予定やメモを自由に入力（例：5/27 骨子提出締め切り）';
   memo.value = person.memo;
-  memo.addEventListener('input', () => {
-    data[personIdx].memo = memo.value; saveData();
-  });
+  memo.addEventListener('input', () => { data[personIdx].memo = memo.value; saveData(); });
   panel.appendChild(memo);
 
   return panel;
