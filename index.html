@@ -121,10 +121,25 @@
     }
     .date-input:focus { border-bottom-color: #64ffda; color: #1a1a2e; }
 
+    .select-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 10px;
+      color: inherit;
+      opacity: 0.7;
+    }
     .status-select {
-      border: none;
+      border: 1.5px solid currentColor;
       border-radius: 20px;
-      padding: 3px 10px;
+      padding: 4px 26px 4px 12px;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
@@ -132,9 +147,26 @@
       appearance: none;
       -webkit-appearance: none;
       text-align: center;
-      min-width: 80px;
+      min-width: 88px;
+      opacity: 0.9;
     }
-    .status-select:focus { outline: 2px solid #64ffda; outline-offset: 1px; }
+    .status-select:hover { opacity: 1; }
+    .status-select:focus { outline: 2px solid #64ffda; outline-offset: 2px; }
+
+    .fb-input {
+      width: 100%;
+      min-width: 100px;
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      color: #555;
+      outline: none;
+      padding: 2px 4px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .fb-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
+    .fb-input::placeholder { color: #c5c8d3; }
 
     .memo-textarea {
       width: 100%;
@@ -182,19 +214,14 @@ const STATUS_STYLE = {
   '—':     { bg: '#f0f2f5', color: '#c5c8d3' },
 };
 
+function defaultArticle() {
+  return { kw: '', fbTanto: '', kotsushi: '未着手', honbun: '未着手', startPlan: '', startActual: '', endPlan: '', endActual: '', progress: '—' };
+}
+
 function defaultData() {
   return PERSONS.map(name => ({
     name,
-    articles: Array.from({ length: ARTICLE_COUNT }, () => ({
-      kw: '',
-      kotsushi: '未着手',
-      honbun: '未着手',
-      startPlan: '',
-      startActual: '',
-      endPlan: '',
-      endActual: '',
-      progress: '—'
-    })),
+    articles: Array.from({ length: ARTICLE_COUNT }, defaultArticle),
     memo: ''
   }));
 }
@@ -202,7 +229,14 @@ function defaultData() {
 function loadData() {
   try {
     const saved = localStorage.getItem('wbs_data');
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // 既存データに新フィールドがない場合のマイグレーション
+      return parsed.map(person => ({
+        ...person,
+        articles: person.articles.map(art => ({ ...defaultArticle(), ...art }))
+      }));
+    }
   } catch(e) {}
   return defaultData();
 }
@@ -221,6 +255,8 @@ function applySelectStyle(sel) {
 }
 
 function makeSelect(opts, value, onChange) {
+  const wrap = document.createElement('div');
+  wrap.className = 'select-wrap';
   const sel = document.createElement('select');
   sel.className = 'status-select';
   opts.forEach(o => {
@@ -235,7 +271,18 @@ function makeSelect(opts, value, onChange) {
     applySelectStyle(sel);
     onChange(sel.value);
   });
-  return sel;
+  wrap.appendChild(sel);
+  return wrap;
+}
+
+function makeFbInput(value, onChange) {
+  const inp = document.createElement('input');
+  inp.type = 'text';
+  inp.className = 'fb-input';
+  inp.value = value;
+  inp.placeholder = '担当者名';
+  inp.addEventListener('input', () => onChange(inp.value));
+  return inp;
 }
 
 function makeKwInput(value, onChange) {
@@ -284,8 +331,9 @@ function renderPanel(personIdx) {
 
   const tr1 = document.createElement('tr');
   [
-    { text: 'No.',    rowspan: 2, cls: 'col-no' },
-    { text: 'KW',     rowspan: 2 },
+    { text: 'No.',     rowspan: 2, cls: 'col-no' },
+    { text: 'KW',      rowspan: 2 },
+    { text: 'FB担当',  rowspan: 2 },
     { text: '骨子作成', rowspan: 2 },
     { text: '本文提出', rowspan: 2 },
     { text: '開始日',  colspan: 2, cls: 'group-header' },
@@ -322,6 +370,10 @@ function renderPanel(personIdx) {
 
     tr.appendChild(td(makeKwInput(art.kw, v => {
       data[personIdx].articles[ai].kw = v; saveData();
+    })));
+
+    tr.appendChild(td(makeFbInput(art.fbTanto, v => {
+      data[personIdx].articles[ai].fbTanto = v; saveData();
     })));
 
     tr.appendChild(td(makeSelect(STATUS_OPTS, art.kotsushi, v => {
