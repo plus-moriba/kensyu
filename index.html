@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>記事研修管理WBS</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background: #f0f2f5; color: #1a1a2e; font-size: 14px; }
+
+    .header { background: #1a1a2e; color: #fff; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 18px; font-weight: 700; }
+    .header .today { font-size: 12px; color: #8892b0; }
+
+    .tabs { background: #16213e; display: flex; padding: 0 28px; gap: 4px; }
+    .tab-btn { padding: 11px 20px; cursor: pointer; color: #8892b0; font-size: 13px; font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.15s; user-select: none; }
+    .tab-btn:hover { color: #ccd6f6; }
+    .tab-btn.active { color: #64ffda; border-bottom-color: #64ffda; }
+
+    .content { padding: 24px 28px; max-width: 1100px; }
+    .person-panel { display: none; }
+    .person-panel.active { display: block; }
+
+    .sec-heading { font-size: 12px; font-weight: 700; color: #8892b0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; margin-top: 24px; }
+    .sec-heading:first-child { margin-top: 0; }
+
+    .table-wrap { overflow-x: auto; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    thead tr { background: #1a1a2e; }
+    th { padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; color: #8892b0; white-space: nowrap; }
+    td { padding: 10px 14px; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #fafbfc; }
+
+    .col-no { width: 44px; text-align: center; }
+    td.col-no { color: #c5c8d3; font-size: 12px; }
+    .col-kw { min-width: 180px; font-weight: 600; color: #1a1a2e; }
+    .col-date { white-space: nowrap; font-size: 12px; color: #8892b0; }
+
+    /* ステータスバッジ */
+    .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge[data-status="未着手"]  { background: #f0f2f5; color: #aab0c0; }
+    .badge[data-status="作業中…"] { background: #e8f4fd; color: #2980b9; }
+    .badge[data-status="FB中"]    { background: #fff8e6; color: #d68910; }
+    .badge[data-status="完了"]    { background: #e8f8f0; color: #27ae60; }
+    .badge[data-status="オンスケ"] { background: #e8f8f0; color: #27ae60; }
+    .badge[data-status="遅延"]    { background: #fdf0f0; color: #e74c3c; }
+    .badge[data-status="前倒し"]  { background: #e8f4fd; color: #2980b9; }
+    .badge[data-status="—"]      { background: #f0f2f5; color: #c5c8d3; }
+
+    /* カレンダー */
+    .cal-wrap { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+    .cal-item { display: flex; gap: 16px; padding: 10px 16px; border-bottom: 1px solid #f0f2f5; align-items: flex-start; }
+    .cal-item:last-child { border-bottom: none; }
+    .cal-date { font-size: 12px; font-weight: 700; color: #64ffda; min-width: 90px; background: #1a1a2e; padding: 3px 8px; border-radius: 4px; text-align: center; flex-shrink: 0; }
+    .cal-text { font-size: 13px; color: #1a1a2e; padding-top: 2px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>記事研修管理WBS</h1>
+  <span class="today" id="today-label"></span>
+</div>
+
+<!-- タブの名前はここを変更 -->
+<div class="tabs">
+  <div class="tab-btn active" onclick="showPanel(0)">新卒A</div>
+  <div class="tab-btn" onclick="showPanel(1)">新卒B</div>
+  <div class="tab-btn" onclick="showPanel(2)">新卒C</div>
+  <div class="tab-btn" onclick="showPanel(3)">新卒D</div>
+</div>
+
+<div class="content">
+
+  <!-- ==============================================
+    編集ガイド
+    ・KW     → <td class="col-kw"> の中のテキストを変更
+    ・ステータス → data-status="〇〇" とバッジ内テキストの両方を変更
+        選択肢：未着手 / 作業中… / FB中 / 完了
+    ・進捗    → 同上
+        選択肢：オンスケ / 遅延 / 前倒し / —
+    ・日付    → <td class="col-date"> の中のテキストを変更
+    ・カレンダー → cal-item ブロックをコピーして追加
+  =============================================== -->
+
+  <!-- ========== 新卒A ========== -->
+  <div class="person-panel active" id="panel-0">
+
+    <div class="sec-heading">記事進捗</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-no">No.</th>
+            <th>KW</th>
+            <th>骨子作成</th>
+            <th>本文提出</th>
+            <th>開始日</th>
+            <th>終了日（予定）</th>
+            <th>進捗</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-no">1</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-no">2</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-no">3</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-no">4</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-no">5</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-no">6</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-no">7</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-no">8</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-no">9</td>
+            <td class="col-kw">KWをここに入力</td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td><span class="badge" data-status="未着手">未着手</span></td>
+            <td class="col-date">—</td>
+            <td class="col-date">—</td>
+            <td><span class="badge" data-status="—">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-heading">スケジュール・メモ</div>
+    <div class="cal-wrap">
+      <!-- 追加方法：下の cal-item ブロックをコピーして日付とテキストを変える -->
+      <div class="cal-item">
+        <span class="cal-date">2026/05/20</span>
+        <span class="cal-text">研修キックオフ</span>
+      </div>
+    </div>
+
+  </div><!-- /panel-0 -->
+
+  <!-- ========== 新卒B ========== -->
+  <div class="person-panel" id="panel-1">
+
+    <div class="sec-heading">記事進捗</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-no">No.</th>
+            <th>KW</th>
+            <th>骨子作成</th>
+            <th>本文提出</th>
+            <th>開始日</th>
+            <th>終了日（予定）</th>
+            <th>進捗</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-no">1</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">2</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">3</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">4</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">5</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">6</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">7</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">8</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">9</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-heading">スケジュール・メモ</div>
+    <div class="cal-wrap">
+      <div class="cal-item">
+        <span class="cal-date">2026/05/20</span>
+        <span class="cal-text">研修キックオフ</span>
+      </div>
+    </div>
+
+  </div><!-- /panel-1 -->
+
+  <!-- ========== 新卒C ========== -->
+  <div class="person-panel" id="panel-2">
+
+    <div class="sec-heading">記事進捗</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-no">No.</th>
+            <th>KW</th>
+            <th>骨子作成</th>
+            <th>本文提出</th>
+            <th>開始日</th>
+            <th>終了日（予定）</th>
+            <th>進捗</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-no">1</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">2</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">3</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">4</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">5</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">6</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">7</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">8</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">9</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-heading">スケジュール・メモ</div>
+    <div class="cal-wrap">
+      <div class="cal-item">
+        <span class="cal-date">2026/05/20</span>
+        <span class="cal-text">研修キックオフ</span>
+      </div>
+    </div>
+
+  </div><!-- /panel-2 -->
+
+  <!-- ========== 新卒D ========== -->
+  <div class="person-panel" id="panel-3">
+
+    <div class="sec-heading">記事進捗</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-no">No.</th>
+            <th>KW</th>
+            <th>骨子作成</th>
+            <th>本文提出</th>
+            <th>開始日</th>
+            <th>終了日（予定）</th>
+            <th>進捗</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-no">1</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">2</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">3</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">4</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">5</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">6</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">7</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">8</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+          <tr><td class="col-no">9</td><td class="col-kw">KWをここに入力</td><td><span class="badge" data-status="未着手">未着手</span></td><td><span class="badge" data-status="未着手">未着手</span></td><td class="col-date">—</td><td class="col-date">—</td><td><span class="badge" data-status="—">—</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-heading">スケジュール・メモ</div>
+    <div class="cal-wrap">
+      <div class="cal-item">
+        <span class="cal-date">2026/05/20</span>
+        <span class="cal-text">研修キックオフ</span>
+      </div>
+    </div>
+
+  </div><!-- /panel-3 -->
+
+</div><!-- /content -->
+
+<script>
+  document.getElementById('today-label').textContent =
+    '今日：' + new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+  function showPanel(index) {
+    document.querySelectorAll('.person-panel').forEach((el, i) => {
+      el.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.tab-btn').forEach((el, i) => {
+      el.classList.toggle('active', i === index);
+    });
+  }
+</script>
+</body>
+</html>
