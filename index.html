@@ -64,12 +64,19 @@
     .kw-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
     .kw-input::placeholder { color: #c5c8d3; font-weight: 400; }
     .fb-input {
-      width: 100%; min-width: 90px; border: none; background: transparent;
+      width: 100%; min-width: 60px; max-width: 80px; border: none; background: transparent;
       font-size: 12px; color: #555; outline: none; padding: 2px 4px;
       border-bottom: 1px solid transparent; transition: border-color 0.15s;
     }
     .fb-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
     .fb-input::placeholder { color: #c5c8d3; }
+    .url-input {
+      width: 100%; min-width: 140px; border: none; background: transparent;
+      font-size: 12px; color: #2980b9; outline: none; padding: 2px 4px;
+      border-bottom: 1px solid transparent; transition: border-color 0.15s;
+    }
+    .url-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
+    .url-input::placeholder { color: #c5c8d3; }
     .date-input {
       border: none; background: transparent; font-size: 11px; color: #8892b0;
       outline: none; padding: 2px 4px; border-bottom: 1px solid transparent;
@@ -186,7 +193,7 @@ const STATUS_STYLE = {
 function defaultStep()    { return { status: '未着手', timeStart: '', timeEnd: '' }; }
 function defaultArticle() {
   return {
-    kw: '', fbTanto: '',
+    kw: '', articleUrl: '', fbTanto: '',
     kotsushi: '未着手', kotsushiSteps: KOTSUSHI_STEPS.map(() => defaultStep()),
     honbun:   '未着手', honbunSteps:   HONBUN_STEPS.map(()    => defaultStep()),
     startPlan: '', startActual: '', endPlan: '', endActual: '', progress: '—'
@@ -318,7 +325,7 @@ function makeDetailRow(pi, ai) {
   tr.style.display = 'none';
 
   const tdInner = document.createElement('td');
-  tdInner.colSpan = 10;
+  tdInner.colSpan = 11;
   const inner = document.createElement('div');
   inner.className = 'detail-inner';
 
@@ -395,6 +402,7 @@ function renderPanel(pi) {
   [
     { text: 'No.',     rowspan: 2, cls: 'col-no' },
     { text: 'KW',      rowspan: 2 },
+    { text: '記事URL', rowspan: 2 },
     { text: 'FB担当',  rowspan: 2 },
     { text: '骨子作成', rowspan: 2 },
     { text: '本文作成', rowspan: 2 },
@@ -443,6 +451,13 @@ function renderPanel(pi) {
     });
     kwInp.id = `el-kw-${pi}-${ai}`;
     tr.appendChild(tdOf(kwInp));
+
+    // 記事URL
+    const urlInp = makeTextInput('url-input', art.articleUrl, 'https://...', v => {
+      data[pi].articles[ai].articleUrl = v; save(`persons/${pi}/articles/${ai}/articleUrl`, v);
+    });
+    urlInp.id = `el-url-${pi}-${ai}`;
+    tr.appendChild(tdOf(urlInp));
 
     // FB担当
     const fbInp = makeTextInput('fb-input', art.fbTanto, '担当者名', v => {
@@ -553,6 +568,7 @@ function syncFromRemote(remotePersons) {
     Array.from({ length: ARTICLE_COUNT }, (_, ai) => {
       const ra = toArr(rp.articles, ARTICLE_COUNT)[ai] || {};
       setIfNotFocused(`el-kw-${pi}-${ai}`,  ra.kw);
+      setIfNotFocused(`el-url-${pi}-${ai}`, ra.articleUrl);
       setIfNotFocused(`el-fb-${pi}-${ai}`,  ra.fbTanto);
       setSelectIfNotFocused(`el-ks-${pi}-${ai}`, ra.kotsushi || '未着手');
       setSelectIfNotFocused(`el-hb-${pi}-${ai}`, ra.honbun   || '未着手');
