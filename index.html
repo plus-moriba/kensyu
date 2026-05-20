@@ -8,248 +8,117 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
-      background: #f0f2f5;
-      color: #1a1a2e;
-      font-size: 14px;
+      background: #f0f2f5; color: #1a1a2e; font-size: 14px;
     }
-
+    .loading {
+      position: fixed; inset: 0; background: rgba(26,26,46,0.92);
+      color: #64ffda; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 600; z-index: 100; letter-spacing: 1px;
+    }
     .header {
-      background: #1a1a2e;
-      color: #fff;
-      padding: 18px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      background: #1a1a2e; color: #fff; padding: 18px 28px;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .header h1 { font-size: 18px; font-weight: 700; }
     .today { font-size: 12px; color: #8892b0; }
-
     .tabs { background: #16213e; display: flex; padding: 0 28px; gap: 4px; }
     .tab-btn {
-      padding: 11px 20px;
-      cursor: pointer;
-      color: #8892b0;
-      font-size: 13px;
-      font-weight: 600;
-      border-bottom: 3px solid transparent;
-      transition: all 0.15s;
-      user-select: none;
+      padding: 11px 20px; cursor: pointer; color: #8892b0;
+      font-size: 13px; font-weight: 600; border-bottom: 3px solid transparent;
+      transition: all 0.15s; user-select: none;
     }
     .tab-btn:hover { color: #ccd6f6; }
     .tab-btn.active { color: #64ffda; border-bottom-color: #64ffda; }
-
     .content { padding: 24px 28px; }
     .person-panel { display: none; }
     .person-panel.active { display: block; }
-
     .sec-heading {
-      font-size: 12px;
-      font-weight: 700;
-      color: #8892b0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-      margin-top: 24px;
+      font-size: 12px; font-weight: 700; color: #8892b0;
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 10px; margin-top: 24px;
     }
     .sec-heading:first-child { margin-top: 0; }
-
-    /* テーブル */
     .table-wrap { overflow-x: auto; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
     table { width: 100%; border-collapse: collapse; background: #fff; }
     thead { background: #1a1a2e; }
-    th {
-      padding: 8px 10px;
-      text-align: left;
-      font-size: 11px;
-      font-weight: 700;
-      color: #8892b0;
-      white-space: nowrap;
-    }
+    th { padding: 8px 10px; text-align: left; font-size: 11px; font-weight: 700; color: #8892b0; white-space: nowrap; }
     th.group-header { text-align: center; color: #64ffda; border-bottom: 1px solid #2d3748; }
     th.sub-header { text-align: center; color: #8892b0; font-size: 10px; font-weight: 600; }
     th.col-no { text-align: center; }
-    td {
-      padding: 6px 10px;
-      border-bottom: 1px solid #f0f2f5;
-      vertical-align: middle;
-    }
+    td { padding: 6px 10px; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
     tbody tr:last-child td { border-bottom: none; }
     tbody tr.main-row:hover td { background: #fafbfc; }
-
-    td.col-no {
-      color: #c5c8d3;
-      font-size: 12px;
-      text-align: center;
-      width: 50px;
-    }
-
-    /* 展開トグルボタン */
+    td.col-no { color: #c5c8d3; font-size: 12px; text-align: center; width: 50px; }
     .toggle-btn {
-      display: block;
-      margin: 0 auto 2px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 9px;
-      color: #8892b0;
-      padding: 2px 5px;
-      border-radius: 3px;
-      transition: color 0.15s, background 0.15s;
-      line-height: 1;
+      display: block; margin: 0 auto 2px; background: none; border: none;
+      cursor: pointer; font-size: 9px; color: #8892b0; padding: 2px 5px;
+      border-radius: 3px; transition: color 0.15s, background 0.15s; line-height: 1;
     }
     .toggle-btn:hover { color: #64ffda; background: #1a1a2e; }
     .toggle-btn.open { color: #64ffda; }
-
-    /* 入力系 */
     .kw-input {
-      width: 100%;
-      min-width: 160px;
-      border: none;
-      background: transparent;
-      font-size: 13px;
-      font-weight: 600;
-      color: #1a1a2e;
-      outline: none;
-      padding: 2px 4px;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.15s;
+      width: 100%; min-width: 160px; border: none; background: transparent;
+      font-size: 13px; font-weight: 600; color: #1a1a2e; outline: none;
+      padding: 2px 4px; border-bottom: 1px solid transparent; transition: border-color 0.15s;
     }
     .kw-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
     .kw-input::placeholder { color: #c5c8d3; font-weight: 400; }
-
     .fb-input {
-      width: 100%;
-      min-width: 90px;
-      border: none;
-      background: transparent;
-      font-size: 12px;
-      color: #555;
-      outline: none;
-      padding: 2px 4px;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.15s;
+      width: 100%; min-width: 90px; border: none; background: transparent;
+      font-size: 12px; color: #555; outline: none; padding: 2px 4px;
+      border-bottom: 1px solid transparent; transition: border-color 0.15s;
     }
     .fb-input:focus { border-bottom-color: #64ffda; background: #f8f9fa; }
     .fb-input::placeholder { color: #c5c8d3; }
-
     .date-input {
-      border: none;
-      background: transparent;
-      font-size: 11px;
-      color: #8892b0;
-      outline: none;
-      padding: 2px 4px;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.15s;
-      width: 110px;
-      cursor: pointer;
+      border: none; background: transparent; font-size: 11px; color: #8892b0;
+      outline: none; padding: 2px 4px; border-bottom: 1px solid transparent;
+      transition: border-color 0.15s; width: 110px; cursor: pointer;
     }
     .date-input:focus { border-bottom-color: #64ffda; color: #1a1a2e; }
-
-    /* セレクト */
     .select-wrap { position: relative; display: inline-block; }
     .select-wrap::after {
-      content: '▾';
-      position: absolute;
-      right: 9px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      font-size: 10px;
-      opacity: 0.7;
+      content: '▾'; position: absolute; right: 9px; top: 50%;
+      transform: translateY(-50%); pointer-events: none; font-size: 10px; opacity: 0.7;
     }
     .status-select {
-      border: 1.5px solid currentColor;
-      border-radius: 20px;
-      padding: 4px 26px 4px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-      text-align: center;
-      min-width: 88px;
+      border: 1.5px solid currentColor; border-radius: 20px;
+      padding: 4px 26px 4px 12px; font-size: 11px; font-weight: 700;
+      cursor: pointer; outline: none; appearance: none; -webkit-appearance: none;
+      text-align: center; min-width: 88px;
     }
     .status-select:hover { opacity: 0.9; }
     .status-select:focus { outline: 2px solid #64ffda; outline-offset: 2px; }
-
-    /* 展開行 */
     .detail-row { background: #f4f6fa; }
     .detail-row > td { padding: 14px 20px 16px; }
-
     .detail-inner { display: flex; gap: 28px; flex-wrap: wrap; }
     .steps-section { flex: 1; min-width: 300px; }
-
     .steps-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #fff;
-      background: #1a1a2e;
-      padding: 4px 12px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      display: inline-block;
+      font-size: 11px; font-weight: 700; color: #fff; background: #1a1a2e;
+      padding: 4px 12px; border-radius: 4px; margin-bottom: 10px; display: inline-block;
     }
-
     .step-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 4px;
-      border-bottom: 1px solid #e8ebf0;
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 4px; border-bottom: 1px solid #e8ebf0;
     }
     .step-row:last-child { border-bottom: none; }
-
-    .step-label {
-      flex: 1;
-      font-size: 12px;
-      color: #1a1a2e;
-      min-width: 160px;
-    }
-    .step-est {
-      font-size: 10px;
-      color: #8892b0;
-      margin-left: 5px;
-    }
-
-    .time-wrap {
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      flex-shrink: 0;
-    }
+    .step-label { flex: 1; font-size: 12px; color: #1a1a2e; min-width: 160px; }
+    .step-est { font-size: 10px; color: #8892b0; margin-left: 5px; }
+    .time-wrap { display: flex; align-items: flex-end; gap: 6px; flex-shrink: 0; }
     .time-field { display: flex; flex-direction: column; gap: 3px; }
     .time-label { font-size: 10px; color: #8892b0; font-weight: 600; white-space: nowrap; }
     .time-sep { font-size: 13px; color: #aab0c0; padding-bottom: 4px; }
     .time-input {
-      border: 1px solid #dde1ea;
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 12px;
-      color: #555;
-      outline: none;
-      width: 90px;
-      transition: border-color 0.15s;
-      background: #fff;
+      border: 1px solid #dde1ea; border-radius: 6px; padding: 4px 8px;
+      font-size: 12px; color: #555; outline: none; width: 90px;
+      transition: border-color 0.15s; background: #fff;
     }
     .time-input:focus { border-color: #64ffda; }
-
-    /* メモ */
     .memo-textarea {
-      width: 100%;
-      min-height: 100px;
-      border: none;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      padding: 14px 16px;
-      font-size: 13px;
-      color: #1a1a2e;
-      resize: vertical;
-      outline: none;
-      font-family: inherit;
-      line-height: 1.8;
+      width: 100%; min-height: 100px; border: none; background: #fff;
+      border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 14px 16px; font-size: 13px; color: #1a1a2e;
+      resize: vertical; outline: none; font-family: inherit; line-height: 1.8;
     }
     .memo-textarea:focus { outline: 2px solid #64ffda; }
     .memo-textarea::placeholder { color: #c5c8d3; }
@@ -257,30 +126,47 @@
 </head>
 <body>
 
+<div id="loading" class="loading">接続中...</div>
+
 <div class="header">
   <h1>記事研修管理WBS</h1>
   <span class="today" id="today-label"></span>
 </div>
-
 <div class="tabs" id="tabs"></div>
 <div class="content" id="content"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBk2fSn5q8I0YNZz1Rb9bq6blHack7EIYk",
+  authDomain: "kensyu-wbs.firebaseapp.com",
+  databaseURL: "https://kensyu-wbs-default-rtdb.firebaseio.com",
+  projectId: "kensyu-wbs",
+  storageBucket: "kensyu-wbs.firebasestorage.app",
+  messagingSenderId: "1003729938620",
+  appId: "1:1003729938620:web:cc2ac5e2b4d53a291e08b9"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ---- 定数 ----
 const PERSONS = ['有方', '稲井', '今野', '田村'];
 const ARTICLE_COUNT = 9;
-const STATUS_OPTS  = ['未着手', '作業中…', 'FB中', '完了'];
-const STEP_OPTS    = ['未着手', '作業中…', '完了'];
+const STATUS_OPTS   = ['未着手', '作業中…', 'FB中', '完了'];
+const STEP_OPTS     = ['未着手', '作業中…', '完了'];
 const PROGRESS_OPTS = ['—', 'オンスケ', '遅延', '前倒し'];
 
 const KOTSUSHI_STEPS = [
-  { label: '①用語と市場理解',      estimate: '1時間' },
+  { label: '①用語と市場理解',       estimate: '1時間' },
   { label: '②ターゲット・意図の仮説', estimate: '1時間' },
-  { label: '③KW調査・ライバル分析', estimate: '2時間' },
-  { label: '④ゴール決定',          estimate: '15分'  },
-  { label: '⑤ロジック組み立て',     estimate: '1時間' },
-  { label: '⑥骨子作成',            estimate: '2時間' },
+  { label: '③KW調査・ライバル分析',  estimate: '2時間' },
+  { label: '④ゴール決定',           estimate: '15分'  },
+  { label: '⑤ロジック組み立て',      estimate: '1時間' },
+  { label: '⑥骨子作成',             estimate: '2時間' },
 ];
-
 const HONBUN_STEPS = [
   { label: 'ライティング＆修正', estimate: '3時間' },
 ];
@@ -296,66 +182,65 @@ const STATUS_STYLE = {
   '—':     { bg: '#f0f2f5', color: '#c5c8d3' },
 };
 
-const TOTAL_COLS = 10;
-
-function defaultStep() { return { status: '未着手', timeStart: '', timeEnd: '' }; }
-
+// ---- データ初期値 ----
+function defaultStep()    { return { status: '未着手', timeStart: '', timeEnd: '' }; }
 function defaultArticle() {
   return {
     kw: '', fbTanto: '',
-    kotsushi: '未着手',
-    kotsushiSteps: KOTSUSHI_STEPS.map(() => defaultStep()),
-    honbun: '未着手',
-    honbunSteps: HONBUN_STEPS.map(() => defaultStep()),
-    startPlan: '', startActual: '',
-    endPlan: '',   endActual: '',
-    progress: '—'
+    kotsushi: '未着手', kotsushiSteps: KOTSUSHI_STEPS.map(() => defaultStep()),
+    honbun:   '未着手', honbunSteps:   HONBUN_STEPS.map(()    => defaultStep()),
+    startPlan: '', startActual: '', endPlan: '', endActual: '', progress: '—'
   };
 }
-
 function defaultData() {
   return PERSONS.map(name => ({
-    name,
-    articles: Array.from({ length: ARTICLE_COUNT }, defaultArticle),
-    memo: ''
+    name, memo: '',
+    articles: Array.from({ length: ARTICLE_COUNT }, defaultArticle)
   }));
 }
 
-function loadData() {
-  try {
-    const saved = localStorage.getItem('wbs_data');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      const def = defaultData();
-      return parsed.map((person, pi) => ({
-        ...def[pi], ...person,
-        articles: person.articles.map(art => {
-          const da = defaultArticle();
-          return {
-            ...da, ...art,
-            kotsushiSteps: KOTSUSHI_STEPS.map((_, i) => {
-              const s = (art.kotsushiSteps || [])[i] || {};
-              return { ...defaultStep(), ...s, timeStart: s.timeStart || s.time || '', timeEnd: s.timeEnd || '' };
-            }),
-            honbunSteps: HONBUN_STEPS.map((_, i) => {
-              const s = (art.honbunSteps || [])[i] || {};
-              return { ...defaultStep(), ...s, timeStart: s.timeStart || s.time || '', timeEnd: s.timeEnd || '' };
-            }),
-          };
-        })
-      }));
-    }
-  } catch(e) {}
-  return defaultData();
+// Firebaseはarrayをobjectで返すので変換
+function toArr(obj, len) {
+  if (!obj) return Array.from({ length: len || 0 }, () => ({}));
+  if (Array.isArray(obj)) return obj;
+  return Object.keys(obj).map(Number).sort((a,b)=>a-b).map(k => obj[k] || {});
 }
 
-function saveData() { localStorage.setItem('wbs_data', JSON.stringify(data)); }
+function parseData(remotePersons) {
+  return PERSONS.map((_, pi) => {
+    const rp = toArr(remotePersons, PERSONS.length)[pi] || {};
+    return {
+      name: PERSONS[pi],
+      memo: rp.memo || '',
+      articles: Array.from({ length: ARTICLE_COUNT }, (_, ai) => {
+        const ra = toArr(rp.articles, ARTICLE_COUNT)[ai] || {};
+        return {
+          ...defaultArticle(), ...ra,
+          kotsushiSteps: KOTSUSHI_STEPS.map((_, si) => {
+            const s = toArr(ra.kotsushiSteps, KOTSUSHI_STEPS.length)[si] || {};
+            return { ...defaultStep(), ...s };
+          }),
+          honbunSteps: HONBUN_STEPS.map((_, si) => {
+            const s = toArr(ra.honbunSteps, HONBUN_STEPS.length)[si] || {};
+            return { ...defaultStep(), ...s };
+          }),
+        };
+      })
+    };
+  });
+}
 
-let data = loadData();
+// ---- 状態 ----
+let data = defaultData();
 let currentPanel = 0;
+let initialized = false;
 
-// ---- ヘルパー ----
+// ---- Firebase 書き込み（フィールド単位）----
+function save(path, value) {
+  set(ref(db, 'wbs/' + path), value === '' ? null : value);
+}
 
+// ---- DOM ヘルパー ----
 function applySelectStyle(sel) {
   const s = STATUS_STYLE[sel.value] || STATUS_STYLE['—'];
   sel.style.background = s.bg;
@@ -376,151 +261,116 @@ function makeSelect(opts, value, onChange) {
   applySelectStyle(sel);
   sel.addEventListener('change', () => { applySelectStyle(sel); onChange(sel.value); });
   wrap.appendChild(sel);
-  return wrap;
+  return { wrap, sel };
 }
 
-function makeInput(cls, value, placeholder, onChange) {
+function makeTextInput(cls, value, placeholder, onChange) {
   const inp = document.createElement('input');
-  inp.type = 'text';
-  inp.className = cls;
-  inp.value = value;
-  inp.placeholder = placeholder;
+  inp.type = 'text'; inp.className = cls;
+  inp.value = value; inp.placeholder = placeholder;
   inp.addEventListener('input', () => onChange(inp.value));
   return inp;
 }
 
-function makeTimeWrap(startVal, endVal, onStartChange, onEndChange) {
-  const wrap = document.createElement('div');
-  wrap.className = 'time-wrap';
-
-  const startField = document.createElement('div');
-  startField.className = 'time-field';
-  const startLabel = document.createElement('div');
-  startLabel.className = 'time-label';
-  startLabel.textContent = '作業開始時間';
-  const startInp = document.createElement('input');
-  startInp.type = 'time';
-  startInp.className = 'time-input';
-  if (startVal) startInp.value = startVal;
-  startInp.addEventListener('change', () => onStartChange(startInp.value));
-  startField.appendChild(startLabel);
-  startField.appendChild(startInp);
-
-  const sep = document.createElement('span');
-  sep.className = 'time-sep';
-  sep.textContent = '~';
-
-  const endField = document.createElement('div');
-  endField.className = 'time-field';
-  const endLabel = document.createElement('div');
-  endLabel.className = 'time-label';
-  endLabel.textContent = '作業終了時間';
-  const endInp = document.createElement('input');
-  endInp.type = 'time';
-  endInp.className = 'time-input';
-  if (endVal) endInp.value = endVal;
-  endInp.addEventListener('change', () => onEndChange(endInp.value));
-  endField.appendChild(endLabel);
-  endField.appendChild(endInp);
-
-  wrap.appendChild(startField);
-  wrap.appendChild(sep);
-  wrap.appendChild(endField);
-  return wrap;
-}
-
 function makeDateInput(value, onChange) {
   const inp = document.createElement('input');
-  inp.type = 'date';
-  inp.className = 'date-input';
+  inp.type = 'date'; inp.className = 'date-input';
   if (value) inp.value = value;
   inp.addEventListener('change', () => onChange(inp.value));
   return inp;
 }
 
-function tdWrap(child) {
-  const el = document.createElement('td');
-  if (child) el.appendChild(child);
-  return el;
+function makeTimeWrap(sv, ev, svId, evId, onS, onE) {
+  const wrap = document.createElement('div');
+  wrap.className = 'time-wrap';
+
+  const sf = document.createElement('div'); sf.className = 'time-field';
+  const sl = document.createElement('div'); sl.className = 'time-label'; sl.textContent = '作業開始時間';
+  const si = document.createElement('input'); si.type = 'time'; si.className = 'time-input';
+  si.id = svId; if (sv) si.value = sv;
+  si.addEventListener('change', () => onS(si.value));
+  sf.appendChild(sl); sf.appendChild(si);
+
+  const sep = document.createElement('span'); sep.className = 'time-sep'; sep.textContent = '~';
+
+  const ef = document.createElement('div'); ef.className = 'time-field';
+  const el = document.createElement('div'); el.className = 'time-label'; el.textContent = '作業終了時間';
+  const ei = document.createElement('input'); ei.type = 'time'; ei.className = 'time-input';
+  ei.id = evId; if (ev) ei.value = ev;
+  ei.addEventListener('change', () => onE(ei.value));
+  ef.appendChild(el); ef.appendChild(ei);
+
+  wrap.appendChild(sf); wrap.appendChild(sep); wrap.appendChild(ef);
+  return wrap;
 }
 
-// ---- 詳細行（折りたたみ内容）----
+function tdOf(child) {
+  const td = document.createElement('td');
+  if (child) td.appendChild(child);
+  return td;
+}
 
-function makeDetailRow(personIdx, ai) {
-  const art = data[personIdx].articles[ai];
+// ---- 詳細行（折りたたみ）----
+function makeDetailRow(pi, ai) {
+  const art = data[pi].articles[ai];
   const tr = document.createElement('tr');
   tr.className = 'detail-row';
   tr.style.display = 'none';
 
   const tdInner = document.createElement('td');
-  tdInner.colSpan = TOTAL_COLS;
-
+  tdInner.colSpan = 10;
   const inner = document.createElement('div');
   inner.className = 'detail-inner';
 
-  // 骨子作成 セクション
-  const kSection = document.createElement('div');
-  kSection.className = 'steps-section';
-  const kTitle = document.createElement('div');
-  kTitle.className = 'steps-title';
-  kTitle.textContent = '骨子作成の内訳';
-  kSection.appendChild(kTitle);
-
+  // 骨子作成セクション
+  const ks = document.createElement('div'); ks.className = 'steps-section';
+  const kt = document.createElement('div'); kt.className = 'steps-title'; kt.textContent = '骨子作成の内訳';
+  ks.appendChild(kt);
   KOTSUSHI_STEPS.forEach((step, si) => {
-    const row = document.createElement('div');
-    row.className = 'step-row';
-
-    const lbl = document.createElement('span');
-    lbl.className = 'step-label';
+    const row = document.createElement('div'); row.className = 'step-row';
+    const lbl = document.createElement('span'); lbl.className = 'step-label';
     lbl.innerHTML = `${step.label}<span class="step-est">（目安：${step.estimate}）</span>`;
     row.appendChild(lbl);
-
-    row.appendChild(makeSelect(STEP_OPTS, art.kotsushiSteps[si].status, v => {
-      data[personIdx].articles[ai].kotsushiSteps[si].status = v; saveData();
-    }));
-
+    const { wrap: sw, sel: ss } = makeSelect(STEP_OPTS, art.kotsushiSteps[si].status, v => {
+      data[pi].articles[ai].kotsushiSteps[si].status = v;
+      save(`persons/${pi}/articles/${ai}/kotsushiSteps/${si}/status`, v);
+    });
+    ss.id = `el-kss-${pi}-${ai}-${si}`;
+    row.appendChild(sw);
     row.appendChild(makeTimeWrap(
-      art.kotsushiSteps[si].timeStart,
-      art.kotsushiSteps[si].timeEnd,
-      vs => { data[personIdx].articles[ai].kotsushiSteps[si].timeStart = vs; saveData(); },
-      ve => { data[personIdx].articles[ai].kotsushiSteps[si].timeEnd   = ve; saveData(); }
+      art.kotsushiSteps[si].timeStart, art.kotsushiSteps[si].timeEnd,
+      `el-kts-${pi}-${ai}-${si}`, `el-kte-${pi}-${ai}-${si}`,
+      v => { data[pi].articles[ai].kotsushiSteps[si].timeStart = v; save(`persons/${pi}/articles/${ai}/kotsushiSteps/${si}/timeStart`, v); },
+      v => { data[pi].articles[ai].kotsushiSteps[si].timeEnd   = v; save(`persons/${pi}/articles/${ai}/kotsushiSteps/${si}/timeEnd`,   v); }
     ));
-
-    kSection.appendChild(row);
+    ks.appendChild(row);
   });
-  inner.appendChild(kSection);
+  inner.appendChild(ks);
 
-  // 本文作成 セクション
-  const hSection = document.createElement('div');
-  hSection.className = 'steps-section';
-  const hTitle = document.createElement('div');
-  hTitle.className = 'steps-title';
-  hTitle.textContent = '本文作成の内訳';
-  hSection.appendChild(hTitle);
-
+  // 本文作成セクション
+  const hs = document.createElement('div'); hs.className = 'steps-section';
+  const ht = document.createElement('div'); ht.className = 'steps-title'; ht.textContent = '本文作成の内訳';
+  hs.appendChild(ht);
   HONBUN_STEPS.forEach((step, si) => {
-    const row = document.createElement('div');
-    row.className = 'step-row';
-
-    const lbl = document.createElement('span');
-    lbl.className = 'step-label';
+    const row = document.createElement('div'); row.className = 'step-row';
+    const lbl = document.createElement('span'); lbl.className = 'step-label';
     lbl.innerHTML = `${step.label}<span class="step-est">（目安：${step.estimate}）</span>`;
     row.appendChild(lbl);
-
-    row.appendChild(makeSelect(STEP_OPTS, art.honbunSteps[si].status, v => {
-      data[personIdx].articles[ai].honbunSteps[si].status = v; saveData();
-    }));
-
+    const { wrap: hw, sel: hs2 } = makeSelect(STEP_OPTS, art.honbunSteps[si].status, v => {
+      data[pi].articles[ai].honbunSteps[si].status = v;
+      save(`persons/${pi}/articles/${ai}/honbunSteps/${si}/status`, v);
+    });
+    hs2.id = `el-hss-${pi}-${ai}-${si}`;
+    row.appendChild(hw);
     row.appendChild(makeTimeWrap(
-      art.honbunSteps[si].timeStart,
-      art.honbunSteps[si].timeEnd,
-      vs => { data[personIdx].articles[ai].honbunSteps[si].timeStart = vs; saveData(); },
-      ve => { data[personIdx].articles[ai].honbunSteps[si].timeEnd   = ve; saveData(); }
+      art.honbunSteps[si].timeStart, art.honbunSteps[si].timeEnd,
+      `el-hts-${pi}-${ai}-${si}`, `el-hte-${pi}-${ai}-${si}`,
+      v => { data[pi].articles[ai].honbunSteps[si].timeStart = v; save(`persons/${pi}/articles/${ai}/honbunSteps/${si}/timeStart`, v); },
+      v => { data[pi].articles[ai].honbunSteps[si].timeEnd   = v; save(`persons/${pi}/articles/${ai}/honbunSteps/${si}/timeEnd`,   v); }
     ));
-
-    hSection.appendChild(row);
+    hs.appendChild(row);
   });
-  inner.appendChild(hSection);
+  inner.appendChild(hs);
 
   tdInner.appendChild(inner);
   tr.appendChild(tdInner);
@@ -528,34 +378,29 @@ function makeDetailRow(personIdx, ai) {
 }
 
 // ---- パネル描画 ----
-
-function renderPanel(personIdx) {
-  const person = data[personIdx];
+function renderPanel(pi) {
+  const person = data[pi];
   const panel = document.createElement('div');
-  panel.className = 'person-panel' + (personIdx === currentPanel ? ' active' : '');
-  panel.id = `panel-${personIdx}`;
+  panel.className = 'person-panel' + (pi === currentPanel ? ' active' : '');
+  panel.id = `panel-${pi}`;
 
-  const heading1 = document.createElement('div');
-  heading1.className = 'sec-heading';
-  heading1.textContent = '記事進捗';
-  panel.appendChild(heading1);
+  const h1 = document.createElement('div'); h1.className = 'sec-heading'; h1.textContent = '記事進捗';
+  panel.appendChild(h1);
 
-  const wrap = document.createElement('div');
-  wrap.className = 'table-wrap';
+  const wrap = document.createElement('div'); wrap.className = 'table-wrap';
   const table = document.createElement('table');
-
-  // ヘッダー 2行
   const thead = document.createElement('thead');
+
   const tr1 = document.createElement('tr');
   [
-    { text: 'No.',    rowspan: 2, cls: 'col-no' },
-    { text: 'KW',     rowspan: 2 },
-    { text: 'FB担当', rowspan: 2 },
+    { text: 'No.',     rowspan: 2, cls: 'col-no' },
+    { text: 'KW',      rowspan: 2 },
+    { text: 'FB担当',  rowspan: 2 },
     { text: '骨子作成', rowspan: 2 },
     { text: '本文作成', rowspan: 2 },
     { text: '開始日',  colspan: 2, cls: 'group-header' },
     { text: '終了日',  colspan: 2, cls: 'group-header' },
-    { text: '進捗',   rowspan: 2 },
+    { text: '進捗',    rowspan: 2 },
   ].forEach(h => {
     const th = document.createElement('th');
     th.textContent = h.text;
@@ -567,76 +412,76 @@ function renderPanel(personIdx) {
   thead.appendChild(tr1);
 
   const tr2 = document.createElement('tr');
-  ['予定', '実際', '予定', '実際'].forEach(t => {
-    const th = document.createElement('th');
-    th.textContent = t;
-    th.className = 'sub-header';
+  ['予定','実際','予定','実際'].forEach(t => {
+    const th = document.createElement('th'); th.textContent = t; th.className = 'sub-header';
     tr2.appendChild(th);
   });
   thead.appendChild(tr2);
   table.appendChild(thead);
 
   const tbody = document.createElement('tbody');
-
   person.articles.forEach((art, ai) => {
-    // 詳細行（先に作る）
-    const detailRow = makeDetailRow(personIdx, ai);
+    const detailRow = makeDetailRow(pi, ai);
+    const tr = document.createElement('tr'); tr.className = 'main-row';
 
-    // メイン行
-    const tr = document.createElement('tr');
-    tr.className = 'main-row';
-
-    // No. ＋ トグルボタン
-    const tdNo = document.createElement('td');
-    tdNo.className = 'col-no';
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'toggle-btn';
-    toggleBtn.textContent = '▶';
-    toggleBtn.title = '詳細を展開';
-    toggleBtn.addEventListener('click', () => {
-      const isOpen = detailRow.style.display !== 'none';
-      detailRow.style.display = isOpen ? 'none' : 'table-row';
-      toggleBtn.textContent = isOpen ? '▶' : '▼';
-      toggleBtn.classList.toggle('open', !isOpen);
+    // No. + トグル
+    const tdNo = document.createElement('td'); tdNo.className = 'col-no';
+    const btn = document.createElement('button'); btn.className = 'toggle-btn'; btn.textContent = '▶';
+    btn.addEventListener('click', () => {
+      const open = detailRow.style.display !== 'none';
+      detailRow.style.display = open ? 'none' : 'table-row';
+      btn.textContent = open ? '▶' : '▼';
+      btn.classList.toggle('open', !open);
     });
-    tdNo.appendChild(toggleBtn);
-    const numSpan = document.createElement('span');
-    numSpan.textContent = ai + 1;
-    tdNo.appendChild(numSpan);
+    const num = document.createElement('span'); num.textContent = ai + 1;
+    tdNo.appendChild(btn); tdNo.appendChild(num);
     tr.appendChild(tdNo);
 
-    tr.appendChild(tdWrap(makeInput('kw-input', art.kw, 'KWを入力', v => {
-      data[personIdx].articles[ai].kw = v; saveData();
-    })));
+    // KW
+    const kwInp = makeTextInput('kw-input', art.kw, 'KWを入力', v => {
+      data[pi].articles[ai].kw = v; save(`persons/${pi}/articles/${ai}/kw`, v);
+    });
+    kwInp.id = `el-kw-${pi}-${ai}`;
+    tr.appendChild(tdOf(kwInp));
 
-    tr.appendChild(tdWrap(makeInput('fb-input', art.fbTanto, '担当者名', v => {
-      data[personIdx].articles[ai].fbTanto = v; saveData();
-    })));
+    // FB担当
+    const fbInp = makeTextInput('fb-input', art.fbTanto, '担当者名', v => {
+      data[pi].articles[ai].fbTanto = v; save(`persons/${pi}/articles/${ai}/fbTanto`, v);
+    });
+    fbInp.id = `el-fb-${pi}-${ai}`;
+    tr.appendChild(tdOf(fbInp));
 
-    tr.appendChild(tdWrap(makeSelect(STATUS_OPTS, art.kotsushi, v => {
-      data[personIdx].articles[ai].kotsushi = v; saveData();
-    })));
+    // 骨子作成
+    const { wrap: ksw, sel: kss } = makeSelect(STATUS_OPTS, art.kotsushi, v => {
+      data[pi].articles[ai].kotsushi = v; save(`persons/${pi}/articles/${ai}/kotsushi`, v);
+    });
+    kss.id = `el-ks-${pi}-${ai}`; tr.appendChild(tdOf(ksw));
 
-    tr.appendChild(tdWrap(makeSelect(STATUS_OPTS, art.honbun, v => {
-      data[personIdx].articles[ai].honbun = v; saveData();
-    })));
+    // 本文作成
+    const { wrap: hbw, sel: hbs } = makeSelect(STATUS_OPTS, art.honbun, v => {
+      data[pi].articles[ai].honbun = v; save(`persons/${pi}/articles/${ai}/honbun`, v);
+    });
+    hbs.id = `el-hb-${pi}-${ai}`; tr.appendChild(tdOf(hbw));
 
-    tr.appendChild(tdWrap(makeDateInput(art.startPlan, v => {
-      data[personIdx].articles[ai].startPlan = v; saveData();
-    })));
-    tr.appendChild(tdWrap(makeDateInput(art.startActual, v => {
-      data[personIdx].articles[ai].startActual = v; saveData();
-    })));
-    tr.appendChild(tdWrap(makeDateInput(art.endPlan, v => {
-      data[personIdx].articles[ai].endPlan = v; saveData();
-    })));
-    tr.appendChild(tdWrap(makeDateInput(art.endActual, v => {
-      data[personIdx].articles[ai].endActual = v; saveData();
-    })));
+    // 日付4列
+    const dates = [
+      ['startPlan',   `el-sp-${pi}-${ai}`],
+      ['startActual', `el-sa-${pi}-${ai}`],
+      ['endPlan',     `el-ep-${pi}-${ai}`],
+      ['endActual',   `el-ea-${pi}-${ai}`],
+    ];
+    dates.forEach(([key, id]) => {
+      const inp = makeDateInput(art[key], v => {
+        data[pi].articles[ai][key] = v; save(`persons/${pi}/articles/${ai}/${key}`, v);
+      });
+      inp.id = id; tr.appendChild(tdOf(inp));
+    });
 
-    tr.appendChild(tdWrap(makeSelect(PROGRESS_OPTS, art.progress, v => {
-      data[personIdx].articles[ai].progress = v; saveData();
-    })));
+    // 進捗
+    const { wrap: pgw, sel: pgs } = makeSelect(PROGRESS_OPTS, art.progress, v => {
+      data[pi].articles[ai].progress = v; save(`persons/${pi}/articles/${ai}/progress`, v);
+    });
+    pgs.id = `el-pg-${pi}-${ai}`; tr.appendChild(tdOf(pgw));
 
     tbody.appendChild(tr);
     tbody.appendChild(detailRow);
@@ -647,48 +492,105 @@ function renderPanel(personIdx) {
   panel.appendChild(wrap);
 
   // メモ
-  const heading2 = document.createElement('div');
-  heading2.className = 'sec-heading';
-  heading2.textContent = 'スケジュール・メモ';
-  panel.appendChild(heading2);
-
+  const h2 = document.createElement('div'); h2.className = 'sec-heading'; h2.textContent = 'スケジュール・メモ';
+  panel.appendChild(h2);
   const memo = document.createElement('textarea');
   memo.className = 'memo-textarea';
   memo.placeholder = '予定やメモを自由に入力（例：5/27 骨子提出締め切り）';
-  memo.value = person.memo;
-  memo.addEventListener('input', () => { data[personIdx].memo = memo.value; saveData(); });
+  memo.value = person.memo; memo.id = `el-memo-${pi}`;
+  memo.addEventListener('input', () => {
+    data[pi].memo = memo.value; save(`persons/${pi}/memo`, memo.value);
+  });
   panel.appendChild(memo);
 
   return panel;
 }
 
 function renderTabs() {
-  const tabsEl = document.getElementById('tabs');
-  tabsEl.innerHTML = '';
+  const el = document.getElementById('tabs'); el.innerHTML = '';
   PERSONS.forEach((name, i) => {
     const btn = document.createElement('div');
     btn.className = 'tab-btn' + (i === currentPanel ? ' active' : '');
     btn.textContent = name;
     btn.addEventListener('click', () => {
       currentPanel = i;
-      document.querySelectorAll('.tab-btn').forEach((b, idx) => b.classList.toggle('active', idx === i));
-      document.querySelectorAll('.person-panel').forEach((p, idx) => p.classList.toggle('active', idx === i));
+      document.querySelectorAll('.tab-btn').forEach((b,idx) => b.classList.toggle('active', idx===i));
+      document.querySelectorAll('.person-panel').forEach((p,idx) => p.classList.toggle('active', idx===i));
     });
-    tabsEl.appendChild(btn);
+    el.appendChild(btn);
   });
 }
 
 function renderAll() {
-  const content = document.getElementById('content');
-  content.innerHTML = '';
+  const content = document.getElementById('content'); content.innerHTML = '';
   PERSONS.forEach((_, i) => content.appendChild(renderPanel(i)));
   renderTabs();
 }
 
-document.getElementById('today-label').textContent =
-  '今日：' + new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+// ---- リモート同期（他のユーザーの変更を反映）----
+function setIfNotFocused(id, value) {
+  const el = document.getElementById(id);
+  if (el && document.activeElement !== el) el.value = value || '';
+}
+function setSelectIfNotFocused(id, value) {
+  const el = document.getElementById(id);
+  if (el && document.activeElement !== el) { el.value = value; applySelectStyle(el); }
+}
 
-renderAll();
+function syncFromRemote(remotePersons) {
+  PERSONS.forEach((_, pi) => {
+    const rp = toArr(remotePersons, PERSONS.length)[pi] || {};
+    setIfNotFocused(`el-memo-${pi}`, rp.memo);
+
+    Array.from({ length: ARTICLE_COUNT }, (_, ai) => {
+      const ra = toArr(rp.articles, ARTICLE_COUNT)[ai] || {};
+      setIfNotFocused(`el-kw-${pi}-${ai}`,  ra.kw);
+      setIfNotFocused(`el-fb-${pi}-${ai}`,  ra.fbTanto);
+      setSelectIfNotFocused(`el-ks-${pi}-${ai}`, ra.kotsushi || '未着手');
+      setSelectIfNotFocused(`el-hb-${pi}-${ai}`, ra.honbun   || '未着手');
+      setIfNotFocused(`el-sp-${pi}-${ai}`, ra.startPlan);
+      setIfNotFocused(`el-sa-${pi}-${ai}`, ra.startActual);
+      setIfNotFocused(`el-ep-${pi}-${ai}`, ra.endPlan);
+      setIfNotFocused(`el-ea-${pi}-${ai}`, ra.endActual);
+      setSelectIfNotFocused(`el-pg-${pi}-${ai}`, ra.progress || '—');
+
+      KOTSUSHI_STEPS.forEach((_, si) => {
+        const s = toArr(ra.kotsushiSteps, KOTSUSHI_STEPS.length)[si] || {};
+        setSelectIfNotFocused(`el-kss-${pi}-${ai}-${si}`, s.status    || '未着手');
+        setIfNotFocused(`el-kts-${pi}-${ai}-${si}`, s.timeStart);
+        setIfNotFocused(`el-kte-${pi}-${ai}-${si}`, s.timeEnd);
+      });
+      HONBUN_STEPS.forEach((_, si) => {
+        const s = toArr(ra.honbunSteps, HONBUN_STEPS.length)[si] || {};
+        setSelectIfNotFocused(`el-hss-${pi}-${ai}-${si}`, s.status    || '未着手');
+        setIfNotFocused(`el-hts-${pi}-${ai}-${si}`, s.timeStart);
+        setIfNotFocused(`el-hte-${pi}-${ai}-${si}`, s.timeEnd);
+      });
+    });
+  });
+  data = parseData(remotePersons);
+}
+
+// ---- 起動 ----
+document.getElementById('today-label').textContent =
+  '今日：' + new Date().toLocaleDateString('ja-JP', { year:'numeric', month:'2-digit', day:'2-digit' });
+
+onValue(ref(db, 'wbs/persons'), snapshot => {
+  const val = snapshot.val();
+  if (!initialized) {
+    initialized = true;
+    if (val) {
+      data = parseData(val);
+    } else {
+      data = defaultData();
+      set(ref(db, 'wbs/persons'), data);
+    }
+    renderAll();
+    document.getElementById('loading').style.display = 'none';
+  } else {
+    if (val) syncFromRemote(val);
+  }
+});
 </script>
 </body>
 </html>
