@@ -213,19 +213,27 @@
       margin-left: 5px;
     }
 
+    .time-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .time-field { display: flex; flex-direction: column; gap: 3px; }
+    .time-label { font-size: 10px; color: #8892b0; font-weight: 600; white-space: nowrap; }
+    .time-sep { font-size: 13px; color: #aab0c0; padding-bottom: 4px; }
     .time-input {
       border: 1px solid #dde1ea;
       border-radius: 6px;
       padding: 4px 8px;
-      font-size: 11px;
+      font-size: 12px;
       color: #555;
       outline: none;
-      width: 140px;
+      width: 90px;
       transition: border-color 0.15s;
       background: #fff;
     }
     .time-input:focus { border-color: #64ffda; }
-    .time-input::placeholder { color: #c5c8d3; }
 
     /* メモ */
     .memo-textarea {
@@ -290,7 +298,7 @@ const STATUS_STYLE = {
 
 const TOTAL_COLS = 10;
 
-function defaultStep() { return { status: '未着手', time: '' }; }
+function defaultStep() { return { status: '未着手', timeStart: '', timeEnd: '' }; }
 
 function defaultArticle() {
   return {
@@ -325,10 +333,14 @@ function loadData() {
           const da = defaultArticle();
           return {
             ...da, ...art,
-            kotsushiSteps: KOTSUSHI_STEPS.map((_, i) =>
-              ({ ...defaultStep(), ...((art.kotsushiSteps || [])[i] || {}) })),
-            honbunSteps: HONBUN_STEPS.map((_, i) =>
-              ({ ...defaultStep(), ...((art.honbunSteps || [])[i] || {}) })),
+            kotsushiSteps: KOTSUSHI_STEPS.map((_, i) => {
+              const s = (art.kotsushiSteps || [])[i] || {};
+              return { ...defaultStep(), ...s, timeStart: s.timeStart || s.time || '', timeEnd: s.timeEnd || '' };
+            }),
+            honbunSteps: HONBUN_STEPS.map((_, i) => {
+              const s = (art.honbunSteps || [])[i] || {};
+              return { ...defaultStep(), ...s, timeStart: s.timeStart || s.time || '', timeEnd: s.timeEnd || '' };
+            }),
           };
         })
       }));
@@ -375,6 +387,46 @@ function makeInput(cls, value, placeholder, onChange) {
   inp.placeholder = placeholder;
   inp.addEventListener('input', () => onChange(inp.value));
   return inp;
+}
+
+function makeTimeWrap(startVal, endVal, onStartChange, onEndChange) {
+  const wrap = document.createElement('div');
+  wrap.className = 'time-wrap';
+
+  const startField = document.createElement('div');
+  startField.className = 'time-field';
+  const startLabel = document.createElement('div');
+  startLabel.className = 'time-label';
+  startLabel.textContent = '作業開始時間';
+  const startInp = document.createElement('input');
+  startInp.type = 'time';
+  startInp.className = 'time-input';
+  if (startVal) startInp.value = startVal;
+  startInp.addEventListener('change', () => onStartChange(startInp.value));
+  startField.appendChild(startLabel);
+  startField.appendChild(startInp);
+
+  const sep = document.createElement('span');
+  sep.className = 'time-sep';
+  sep.textContent = '~';
+
+  const endField = document.createElement('div');
+  endField.className = 'time-field';
+  const endLabel = document.createElement('div');
+  endLabel.className = 'time-label';
+  endLabel.textContent = '作業終了時間';
+  const endInp = document.createElement('input');
+  endInp.type = 'time';
+  endInp.className = 'time-input';
+  if (endVal) endInp.value = endVal;
+  endInp.addEventListener('change', () => onEndChange(endInp.value));
+  endField.appendChild(endLabel);
+  endField.appendChild(endInp);
+
+  wrap.appendChild(startField);
+  wrap.appendChild(sep);
+  wrap.appendChild(endField);
+  return wrap;
 }
 
 function makeDateInput(value, onChange) {
@@ -427,9 +479,12 @@ function makeDetailRow(personIdx, ai) {
       data[personIdx].articles[ai].kotsushiSteps[si].status = v; saveData();
     }));
 
-    row.appendChild(makeInput('time-input', art.kotsushiSteps[si].time, '例）11:00~13:00', v => {
-      data[personIdx].articles[ai].kotsushiSteps[si].time = v; saveData();
-    }));
+    row.appendChild(makeTimeWrap(
+      art.kotsushiSteps[si].timeStart,
+      art.kotsushiSteps[si].timeEnd,
+      vs => { data[personIdx].articles[ai].kotsushiSteps[si].timeStart = vs; saveData(); },
+      ve => { data[personIdx].articles[ai].kotsushiSteps[si].timeEnd   = ve; saveData(); }
+    ));
 
     kSection.appendChild(row);
   });
@@ -456,9 +511,12 @@ function makeDetailRow(personIdx, ai) {
       data[personIdx].articles[ai].honbunSteps[si].status = v; saveData();
     }));
 
-    row.appendChild(makeInput('time-input', art.honbunSteps[si].time, '例）11:00~13:00', v => {
-      data[personIdx].articles[ai].honbunSteps[si].time = v; saveData();
-    }));
+    row.appendChild(makeTimeWrap(
+      art.honbunSteps[si].timeStart,
+      art.honbunSteps[si].timeEnd,
+      vs => { data[personIdx].articles[ai].honbunSteps[si].timeStart = vs; saveData(); },
+      ve => { data[personIdx].articles[ai].honbunSteps[si].timeEnd   = ve; saveData(); }
+    ));
 
     hSection.appendChild(row);
   });
